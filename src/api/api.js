@@ -1,8 +1,20 @@
 const BASE_URL = "";
 
+function getToken() {
+  return localStorage.getItem("authToken");
+}
+
+function withAuthHeaders(headers = {}) {
+  const token = getToken();
+  if (token) {
+    return { ...headers, Authorization: `Bearer ${token}` };
+  }
+  return headers;
+}
+
 async function request(path, options = {}) {
   const response = await fetch(`${BASE_URL}${path}`, {
-    headers: { "Content-Type": "application/json" },
+    headers: withAuthHeaders({ "Content-Type": "application/json" }),
     ...options
   });
 
@@ -14,43 +26,74 @@ async function request(path, options = {}) {
   return data;
 }
 
-export function registerCitizen(payload) {
+export function loginUser(payload) {
+  return request("/login", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function signupUser(payload) {
+  return request("/signup", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function logoutUser() {
+  return request("/logout", {
+    method: "POST"
+  });
+}
+
+export function fetchCitizen(citizenId) {
+  return request(`/citizen/${citizenId}`);
+}
+
+export function createRegistration(payload) {
   return request("/register", {
     method: "POST",
     body: JSON.stringify(payload)
   });
 }
 
-export function fetchStatus(citizenId) {
-  return request(`/status/${citizenId}`);
+export function fetchRegistrations(query = "") {
+  const path = query ? `/registrations?${query}` : "/registrations";
+  return request(path);
 }
 
-export function adminLogin(payload) {
-  return request("/admin/login", {
+export function approveRegistration(payload) {
+  return request("/approve", {
     method: "POST",
     body: JSON.stringify(payload)
   });
 }
 
-export function fetchCitizens() {
-  return request("/admin/citizens");
-}
-
-export function approveCitizen(citizenId) {
-  return request(`/admin/approve/${citizenId}`, { method: "PUT" });
-}
-
-export function rejectCitizen(citizenId) {
-  return request(`/admin/reject/${citizenId}`, { method: "PUT" });
-}
-
-export function scheduleTour(payload) {
-  return request("/tour/schedule", {
+export function rejectRegistration(payload) {
+  return request("/reject", {
     method: "POST",
     body: JSON.stringify(payload)
   });
 }
 
-export function fetchTours(citizenId) {
-  return request(`/tour/${citizenId}`);
+export function updateRegistration(id, payload) {
+  return request(`/registration/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function cancelRegistration(id) {
+  return request(`/registration/${id}`, {
+    method: "DELETE"
+  });
+}
+
+export function fetchStats() {
+  return request("/stats");
+}
+
+export function fetchAuditLogs(query = "") {
+  const path = query ? `/audit-logs?${query}` : "/audit-logs";
+  return request(path);
 }

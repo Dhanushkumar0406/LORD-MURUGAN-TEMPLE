@@ -1,12 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Marcellus&family=Mulish:wght@300;400;600;700&display=swap");
+
 :root {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 18px;
-  background-color: #fefdfb;
-  color: #0f172a;
+  --font-heading: "Marcellus", "Times New Roman", serif;
+  --font-body: "Mulish", "Segoe UI", sans-serif;
+  --ink: #1f2937;
+  --muted: #6b7280;
+  --accent-strong: #8b0000;
+  --gold: #d4a700;
+  --border: rgba(15, 23, 42, 0.12);
+  --surface: rgba(255, 255, 255, 0.92);
+  --shadow: 0 22px 45px rgba(15, 23, 42, 0.16);
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  font-family: var(--font-body);
+  font-size: 17px;
+  color: var(--ink);
+  background-color: #fefbf6;
+  background-image:
+    radial-gradient(circle at 10% 10%, rgba(212, 167, 0, 0.18), transparent 45%),
+    radial-gradient(circle at 90% 20%, rgba(139, 0, 0, 0.15), transparent 40%),
+    linear-gradient(135deg, #fefbf6, #f7f1ea 55%, #f4ece5);
+  background-attachment: fixed;
 }
 
 a {
@@ -14,27 +34,14 @@ a {
   text-decoration: none;
 }
 
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
-  background: #0f172a;
-  color: #fff;
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }
 
-.nav-links a {
-  margin-left: 16px;
-  font-weight: 600;
-}
-
-.nav-links a.active {
-  text-decoration: underline;
-}
-
-.footer {
-  text-align: center;
-  padding: 20px;
-  background: #e2e8f0;
-  color: #1e293b;
+img {
+  max-width: 100%;
+  display: block;
 }

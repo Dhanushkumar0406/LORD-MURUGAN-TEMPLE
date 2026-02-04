@@ -6,8 +6,13 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
+      "/login": "http://127.0.0.1:5000",
+      "/citizen": "http://127.0.0.1:5000",
       "/register": "http://127.0.0.1:5000",
       "/status": "http://127.0.0.1:5000",
+      "/registrations": "http://127.0.0.1:5000",
+      "/approve": "http://127.0.0.1:5000",
+      "/reject": "http://127.0.0.1:5000",
       "/admin": "http://127.0.0.1:5000",
       "/tour": "http://127.0.0.1:5000",
       "/places": "http://127.0.0.1:5000"

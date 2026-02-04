@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/api";
 
-export default function AdminLogin() {
+export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      navigate("/home");
+    }
+  }, [navigate]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -17,16 +24,12 @@ export default function AdminLogin() {
     setError("");
     try {
       const data = await loginUser(form);
-      if (data.role !== "admin") {
-        setError("Admin access required.");
-        return;
-      }
       localStorage.setItem("userLoggedIn", "true");
       localStorage.setItem("authToken", data.token);
       localStorage.setItem("userRole", data.role);
       localStorage.setItem("username", data.username);
       localStorage.setItem("userId", String(data.id));
-      navigate("/admin");
+      navigate("/home");
     } catch (err) {
       setError(err.message);
     }
@@ -35,9 +38,9 @@ export default function AdminLogin() {
   return (
     <section className="page login">
       <div className="login-card">
-        <p className="eyebrow">Admin Portal</p>
-        <h1>Admin Login</h1>
-        <p className="lead">Sign in with admin credentials to manage registrations.</p>
+        <p className="eyebrow">Entry Point</p>
+        <h1>Login</h1>
+        <p className="lead">Sign in to continue to the Free Murugan Temple Tour portal.</p>
         <form className="form" onSubmit={handleSubmit}>
           <label>
             Username
@@ -47,10 +50,10 @@ export default function AdminLogin() {
             Password
             <input name="password" type="password" value={form.password} onChange={handleChange} required />
           </label>
-          <button className="button" type="submit">Login as Admin</button>
+          <button className="button" type="submit">Login</button>
         </form>
         {error && <p className="error">{error}</p>}
-        <p className="hint">Demo admin: admin / admin123</p>
+        <p className="hint">Demo: Ranjith13 / Ranjith!1301</p>
       </div>
     </section>
   );

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../api/api";
+import { signupUser } from "../api/api";
 
-export default function AdminLogin() {
+export default function Signup() {
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -16,17 +16,13 @@ export default function AdminLogin() {
     event.preventDefault();
     setError("");
     try {
-      const data = await loginUser(form);
-      if (data.role !== "admin") {
-        setError("Admin access required.");
-        return;
-      }
-      localStorage.setItem("userLoggedIn", "true");
+      const data = await signupUser(form);
       localStorage.setItem("authToken", data.token);
       localStorage.setItem("userRole", data.role);
       localStorage.setItem("username", data.username);
       localStorage.setItem("userId", String(data.id));
-      navigate("/admin");
+      localStorage.setItem("userLoggedIn", "true");
+      navigate("/home");
     } catch (err) {
       setError(err.message);
     }
@@ -35,9 +31,9 @@ export default function AdminLogin() {
   return (
     <section className="page login">
       <div className="login-card">
-        <p className="eyebrow">Admin Portal</p>
-        <h1>Admin Login</h1>
-        <p className="lead">Sign in with admin credentials to manage registrations.</p>
+        <p className="eyebrow">New User</p>
+        <h1>Create Account</h1>
+        <p className="lead">Sign up to manage temple tour registrations.</p>
         <form className="form" onSubmit={handleSubmit}>
           <label>
             Username
@@ -47,10 +43,9 @@ export default function AdminLogin() {
             Password
             <input name="password" type="password" value={form.password} onChange={handleChange} required />
           </label>
-          <button className="button" type="submit">Login as Admin</button>
+          <button className="button" type="submit">Create Account</button>
         </form>
         {error && <p className="error">{error}</p>}
-        <p className="hint">Demo admin: admin / admin123</p>
       </div>
     </section>
   );
