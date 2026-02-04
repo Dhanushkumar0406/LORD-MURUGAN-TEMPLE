@@ -1,77 +1,36 @@
 import { useState } from "react";
-import { createRegistration } from "../api/api";
-
-const temples = [
-  { name: "Palani", price: 200 },
-  { name: "Thiruchendur", price: 250 },
-  { name: "Swamimalai", price: 350 },
-  { name: "Thirupparamkunram", price: 350 },
-  { name: "Pazhamudircholai", price: 350 },
-  { name: "Tiruttani", price: 300 },
-  { name: "Marudhamalai", price: 150 }
-];
-
-const CURRENCY = "\u20B9";
+import { signupUser } from "../api/api";
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    name: "",
-    city: "",
-    district: "",
-    age: "",
-    temple_name: temples[0].name
+    full_name: "",
+    email: "",
+    citizen_id: "",
+    password: "",
   });
-  const [registrationResult, setRegistrationResult] = useState(null);
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  function handleChange(e) {
-    const { name, value } = e.target;
+  function handleChange(event) {
+    const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
-  function calculateCost() {
-    const age = parseInt(formData.age, 10);
-    if (isNaN(age)) return null;
-
-    if (age > 60) {
-      return { amount: 0, isFree: true };
-    }
-
-    const temple = temples.find((t) => t.name === formData.temple_name);
-    return { amount: temple?.price || 0, isFree: false };
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setRegistrationResult(null);
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setMessage("");
     setError("");
     setSubmitting(true);
 
     try {
-      const data = await createRegistration({
-        name: formData.name,
-        city: formData.city,
-        district: formData.district,
-        age: parseInt(formData.age, 10),
-        temple_name: formData.temple_name
-      });
-
-      setRegistrationResult({
-        citizen_id: data.citizen_id,
-        name: formData.name,
-        temple: formData.temple_name,
-        boarding_point: formData.city,
-        cost: data.cost,
-        is_free: data.is_free,
-        status: data.status
-      });
+      await signupUser(formData);
+      setMessage("Registration submitted. Please wait for admin approval before logging in.");
       setFormData({
-        name: "",
-        city: "",
-        district: "",
-        age: "",
-        temple_name: temples[0].name
+        full_name: "",
+        email: "",
+        citizen_id: "",
+        password: "",
       });
     } catch (err) {
       setError(err.message);
@@ -80,20 +39,18 @@ export default function Register() {
     }
   }
 
-  const costInfo = calculateCost();
-
   return (
     <section className="page">
-      <h2>Temple Tour Registration</h2>
-      <p className="hint">Fill in your details to register for the Murugan Temple Tour.</p>
+      <h2>Citizen Registration</h2>
+      <p className="hint">Submit your details to request access. Admin approval is required before login.</p>
 
       <form className="form card" onSubmit={handleSubmit}>
         <label>
-          Name
+          Full Name
           <input
             type="text"
-            name="name"
-            value={formData.name}
+            name="full_name"
+            value={formData.full_name}
             onChange={handleChange}
             placeholder="Enter your full name"
             required
@@ -101,64 +58,40 @@ export default function Register() {
         </label>
 
         <label>
-          City
+          Email
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Enter your email"
+            required
+          />
+        </label>
+
+        <label>
+          Citizen ID
           <input
             type="text"
-            name="city"
-            value={formData.city}
+            name="citizen_id"
+            value={formData.citizen_id}
             onChange={handleChange}
-            placeholder="Enter your city"
+            placeholder="Enter your citizen ID"
             required
           />
         </label>
 
         <label>
-          District
+          Password
           <input
-            type="text"
-            name="district"
-            value={formData.district}
+            type="password"
+            name="password"
+            value={formData.password}
             onChange={handleChange}
-            placeholder="Enter your district"
+            placeholder="Create a password"
             required
           />
         </label>
-
-        <label>
-          Age
-          <input
-            type="number"
-            name="age"
-            value={formData.age}
-            onChange={handleChange}
-            placeholder="Enter your age"
-            min="1"
-            max="120"
-            required
-          />
-        </label>
-
-        <label>
-          Select Temple
-          <select name="temple_name" value={formData.temple_name} onChange={handleChange}>
-            {temples.map((temple) => (
-              <option key={temple.name} value={temple.name}>
-                {temple.name} - {CURRENCY}{temple.price}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        {costInfo && (
-          <div className="cost-display">
-            <strong>Registration Cost: </strong>
-            {costInfo.isFree ? (
-              <span className="free-badge">FREE (Age above 60)</span>
-            ) : (
-              <span className="price">{CURRENCY}{costInfo.amount}</span>
-            )}
-          </div>
-        )}
 
         <button className="button" type="submit" disabled={submitting}>
           {submitting ? "Submitting..." : "Submit Registration"}
@@ -166,24 +99,7 @@ export default function Register() {
       </form>
 
       {error && <p className="error">{error}</p>}
-
-      {registrationResult && (
-        <div className="card success-card">
-          <h3>Registration Successful!</h3>
-          <div className="citizen-id-display">
-            <span className="label">Your Citizen ID:</span>
-            <span className="citizen-id">{registrationResult.citizen_id}</span>
-          </div>
-          <div className="registration-details">
-            <p><strong>Name:</strong> {registrationResult.name}</p>
-            <p><strong>Temple:</strong> {registrationResult.temple}</p>
-            <p><strong>Boarding Point:</strong> {registrationResult.boarding_point}</p>
-            <p><strong>Cost:</strong> {registrationResult.is_free ? <span className="free-badge">FREE (Senior Citizen)</span> : `${CURRENCY}${registrationResult.cost}`}</p>
-            <p><strong>Status:</strong> {registrationResult.status}</p>
-          </div>
-          <p className="hint">Please save your Citizen ID for future reference.</p>
-        </div>
-      )}
+      {message && <p className="success">{message}</p>}
     </section>
   );
 }

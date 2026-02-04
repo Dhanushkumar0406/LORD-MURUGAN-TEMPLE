@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../api/api";
+import { loginAdmin } from "../api/api";
 
 export default function AdminLogin() {
   const [form, setForm] = useState({ username: "", password: "" });
@@ -16,7 +16,7 @@ export default function AdminLogin() {
     event.preventDefault();
     setError("");
     try {
-      const data = await loginUser(form);
+      const data = await loginAdmin(form);
       if (data.role !== "admin") {
         setError("Admin access required.");
         return;

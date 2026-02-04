@@ -7,6 +7,7 @@ import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
+import MyTicket from "./pages/MyTicket.jsx";
 import "./App.css";
 
 function ProtectedRoute({ children }) {
@@ -40,6 +41,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-ticket"
+            element={
+              <ProtectedRoute>
+                <MyTicket />
               </ProtectedRoute>
             }
           />

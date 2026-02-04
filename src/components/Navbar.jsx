@@ -29,6 +29,11 @@ export default function Navbar() {
             Home
           </NavLink>
         )}
+        {isLoggedIn && role === "user" && (
+          <NavLink to="/my-ticket" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
+            My Ticket
+          </NavLink>
+        )}
         <NavLink to="/register" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
           Register
         </NavLink>

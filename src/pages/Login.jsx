@@ -40,10 +40,10 @@ export default function Login() {
       <div className="login-card">
         <p className="eyebrow">Entry Point</p>
         <h1>Login</h1>
-        <p className="lead">Sign in to continue to the Free Murugan Temple Tour portal.</p>
+        <p className="lead">Sign in with your approved account to continue.</p>
         <form className="form" onSubmit={handleSubmit}>
           <label>
-            Username
+            Email or Citizen ID
             <input name="username" value={form.username} onChange={handleChange} required />
           </label>
           <label>
@@ -53,7 +53,7 @@ export default function Login() {
           <button className="button" type="submit">Login</button>
         </form>
         {error && <p className="error">{error}</p>}
-        <p className="hint">Demo: Ranjith13 / Ranjith!1301</p>
+        <p className="hint">Login is available after admin approval.</p>
       </div>
     </section>
   );
