@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createRegistration, fetchMyRegistrations, updateRegistration, cancelRegistration } from "../api/api";
+import { createRegistration, fetchRegistrations, updateRegistration, cancelRegistration } from "../api/api";
 
 const emptyForm = {
   name: "",
@@ -27,7 +27,7 @@ export default function Register() {
 
   async function loadRegistrations() {
     try {
-      const data = await fetchMyRegistrations();
+      const data = await fetchRegistrations();
       setRegistrations(data.items || []);
     } catch {
       // Not logged in or error — silently skip
