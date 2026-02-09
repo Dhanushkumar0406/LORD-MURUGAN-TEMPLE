@@ -1,97 +1,156 @@
-const API_BASE = import.meta.env.VITE_API_URL || "";
+const BASE_URL = "";
 
-function getAuthHeaders() {
-  const token = localStorage.getItem("authToken");
-  return token ? { Authorization: `Bearer ${token}` } : {};
+function getToken() {
+  return localStorage.getItem("authToken");
+}
+
+function withAuthHeaders(headers = {}) {
+  const token = getToken();
+  if (token) {
+    return { ...headers, Authorization: `Bearer ${token}` };
+  }
+  return headers;
 }
 
 async function request(path, options = {}) {
-  const headers = {
-    ...(options.body ? { "Content-Type": "application/json" } : {}),
-    ...options.headers,
-  };
+  const url = `${BASE_URL}${path}`;
+  const method = options.method || "GET";
+  console.debug(`[API] ${method} ${url}`);
 
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers,
+  const { headers: optionHeaders, ...restOptions } = options;
+  const response = await fetch(url, {
+    ...restOptions,
+    headers: withAuthHeaders({ "Content-Type": "application/json", ...optionHeaders }),
   });
 
-  const isJson = response.headers
-    .get("content-type")
-    ?.includes("application/json");
-  const data = isJson ? await response.json() : null;
-
+  const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    const message =
-      data?.error || data?.message || `Request failed (${response.status})`;
+    const message = data.error || "Request failed";
+    console.error(`[API] ${method} ${url} → ${response.status}`, data);
     throw new Error(message);
   }
-
+  console.debug(`[API] ${method} ${url} → ${response.status}`, data);
   return data;
 }
 
-export async function signupUser(payload) {
-  return request("/api/auth/register", {
+export function loginUser(payload) {
+  return request("/login", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   });
 }
 
-export async function loginUser(payload) {
-  return request("/api/auth/login", {
+export function signupUser(payload) {
+  return request("/signup", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   });
 }
 
-export async function loginAdmin(payload) {
+export function logoutUser() {
+  return request("/logout", {
+    method: "POST"
+  });
+}
+
+export function fetchCitizen(citizenId) {
+  return request(`/citizen/${citizenId}`);
+}
+
+export function createRegistration(payload) {
+  return request("/register", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function fetchMyRegistrations() {
+  return request("/my-registrations");
+}
+
+export function fetchRegistrations(query = "") {
+  const path = query ? `/registrations?${query}` : "/registrations";
+  return request(path);
+}
+
+export function approveRegistration(payload) {
+  return request("/approve", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function rejectRegistration(payload) {
+  return request("/reject", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function updateRegistration(id, payload) {
+  return request(`/registration/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function cancelRegistration(id) {
+  return request(`/registration/${id}`, {
+    method: "DELETE"
+  });
+}
+
+export function fetchStats() {
+  return request("/stats");
+}
+
+export function fetchAuditLogs(query = "") {
+  const path = query ? `/audit-logs?${query}` : "/audit-logs";
+  return request(path);
+}
+
+export function loginAdmin(payload) {
   return request("/api/admin/login", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   });
 }
 
-export async function logoutUser() {
-  return request("/api/auth/logout", { method: "POST" });
+export function fetchMyTicket() {
+  return request("/api/user/ticket");
 }
 
-export async function fetchPendingUsers() {
-  const data = await request("/api/admin/pending-users", {
-    headers: getAuthHeaders(),
-  });
-  return data.users || [];
+export function fetchPendingUsers() {
+  return request("/api/admin/pending-users").then((data) => data.users);
 }
 
-export async function approveUser(userId) {
-  return request(`/api/admin/approve/${userId}`, {
-    method: "POST",
-    headers: getAuthHeaders(),
-  });
+export function approveUser(userId) {
+  return request(`/api/admin/approve/${userId}`, { method: "POST" });
 }
 
-export async function rejectUser(userId) {
-  return request(`/api/admin/reject/${userId}`, {
-    method: "POST",
-    headers: getAuthHeaders(),
-  });
+export function rejectUser(userId) {
+  return request(`/api/admin/reject/${userId}`, { method: "POST" });
 }
 
-export async function createTicket(userId, payload) {
+export function createTicket(userId, payload) {
   return request(`/api/admin/ticket/${userId}`, {
     method: "POST",
-    headers: getAuthHeaders(),
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   });
 }
 
-export async function fetchProfile() {
-  return request("/api/user/profile", {
-    headers: getAuthHeaders(),
+export async function downloadTicketPdf(pdfUrl) {
+  const response = await fetch(pdfUrl, {
+    headers: withAuthHeaders()
   });
-}
-
-export async function fetchMyTicket() {
-  return request("/api/user/ticket", {
-    headers: getAuthHeaders(),
-  });
+  if (!response.ok) throw new Error("Failed to download ticket PDF");
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "ticket.pdf";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }

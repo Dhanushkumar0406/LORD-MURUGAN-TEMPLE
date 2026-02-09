@@ -5,15 +5,14 @@ import Home from "./pages/Home.jsx";
 import Register from "./pages/Register.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
-import Login from "./pages/Login.jsx";
-import Signup from "./pages/Signup.jsx";
 import MyTicket from "./pages/MyTicket.jsx";
+import TempleTickets from "./pages/TempleTickets.jsx";
 import "./App.css";
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem("authToken");
   if (!token) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/admin-login" replace />;
   }
   return children;
 }
@@ -33,9 +32,8 @@ export default function App() {
       <Navbar />
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Navigate to="/admin-login" replace />} />
           <Route path="/admin-login" element={<AdminLogin />} />
-          <Route path="/signup" element={<Signup />} />
           <Route
             path="/home"
             element={
@@ -61,7 +59,15 @@ export default function App() {
               </AdminRoute>
             }
           />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route
+            path="/temple-tickets"
+            element={
+              <AdminRoute>
+                <TempleTickets />
+              </AdminRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/admin-login" replace />} />
         </Routes>
       </main>
       <Footer />

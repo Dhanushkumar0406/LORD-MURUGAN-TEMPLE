@@ -43,7 +43,7 @@ export default function Login() {
         <p className="lead">Sign in with your approved account to continue.</p>
         <form className="form" onSubmit={handleSubmit}>
           <label>
-            Email or Citizen ID
+            Username
             <input name="username" value={form.username} onChange={handleChange} required />
           </label>
           <label>

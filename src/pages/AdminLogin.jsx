@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginAdmin } from "../api/api";
+import { loginUser } from "../api/api";
 
 export default function AdminLogin() {
   const [form, setForm] = useState({ username: "", password: "" });
@@ -16,7 +16,7 @@ export default function AdminLogin() {
     event.preventDefault();
     setError("");
     try {
-      const data = await loginAdmin(form);
+      const data = await loginUser(form);
       if (data.role !== "admin") {
         setError("Admin access required.");
         return;
@@ -26,7 +26,7 @@ export default function AdminLogin() {
       localStorage.setItem("userRole", data.role);
       localStorage.setItem("username", data.username);
       localStorage.setItem("userId", String(data.id));
-      navigate("/admin");
+      navigate("/home");
     } catch (err) {
       setError(err.message);
     }
@@ -50,7 +50,7 @@ export default function AdminLogin() {
           <button className="button" type="submit">Login as Admin</button>
         </form>
         {error && <p className="error">{error}</p>}
-        <p className="hint">Demo admin: admin / admin123</p>
+        <p className="hint">HELLO RANJITH ADMIN</p>
       </div>
     </section>
   );

@@ -69,7 +69,8 @@ export default function MyTicket() {
   }
 
   const createdAt = ticket.created_at ? new Date(ticket.created_at) : null;
-  const costText = ticket.is_free ? "FREE (Age above 60)" : `₹${ticket.cost}`;
+  const isFree = ticket.cost === 0 || ticket.age >= 60;
+  const costText = isFree ? "FREE (Age 60+)" : `₹${ticket.cost}`;
 
   return (
     <section className="page">

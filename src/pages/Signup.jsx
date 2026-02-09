@@ -3,9 +3,7 @@ import { signupUser } from "../api/api";
 
 export default function Signup() {
   const [form, setForm] = useState({
-    full_name: "",
-    email: "",
-    citizen_id: "",
+    username: "",
     password: "",
   });
   const [error, setError] = useState("");
@@ -26,9 +24,7 @@ export default function Signup() {
       await signupUser(form);
       setMessage("Registration submitted. Please wait for admin approval before logging in.");
       setForm({
-        full_name: "",
-        email: "",
-        citizen_id: "",
+        username: "",
         password: "",
       });
     } catch (err) {
@@ -46,20 +42,12 @@ export default function Signup() {
         <p className="lead">Register your account. Admin approval is required before login.</p>
         <form className="form" onSubmit={handleSubmit}>
           <label>
-            Full Name
-            <input name="full_name" value={form.full_name} onChange={handleChange} required />
+            Username
+            <input name="username" value={form.username} onChange={handleChange} required />
           </label>
           <label>
-            Email
-            <input name="email" type="email" value={form.email} onChange={handleChange} required />
-          </label>
-          <label>
-            Citizen ID
-            <input name="citizen_id" value={form.citizen_id} onChange={handleChange} required />
-          </label>
-          <label>
-            Password
-            <input name="password" type="password" value={form.password} onChange={handleChange} required />
+            Password (min 6 characters)
+            <input name="password" type="password" value={form.password} onChange={handleChange} required minLength="6" />
           </label>
           <button className="button" type="submit" disabled={submitting}>
             {submitting ? "Submitting..." : "Create Account"}

@@ -291,6 +291,112 @@
   color: var(--accent-strong);
 }
 
+/* InfoHut Section */
+.infohut {
+  margin-top: 36px;
+  padding: 28px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(139, 0, 0, 0.04), rgba(212, 167, 0, 0.06));
+  border: 1px solid var(--border);
+}
+
+.infohut h2 {
+  font-size: 1.4rem;
+  margin-bottom: 22px;
+}
+
+.infohut-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.infohut-card {
+  padding: 20px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.infohut-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.infohut-card--highlight {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.02));
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.infohut-icon {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+}
+
+.infohut-card h3 {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.infohut-card p {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+
+.infohut-tamil {
+  color: var(--muted) !important;
+  font-style: italic;
+  font-size: 0.88rem !important;
+}
+
+.infohut-pricing {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.infohut-price-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+}
+
+.infohut-price-card--free {
+  background: rgba(34, 197, 94, 0.06);
+  border-color: rgba(34, 197, 94, 0.25);
+}
+
+.infohut-price-card--paid {
+  background: rgba(139, 0, 0, 0.04);
+  border-color: rgba(139, 0, 0, 0.2);
+}
+
+.infohut-price-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.infohut-price-value {
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .infohut-pricing {
+    grid-template-columns: 1fr;
+  }
+}
+
 .temple-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

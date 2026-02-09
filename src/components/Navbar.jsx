@@ -29,17 +29,19 @@ export default function Navbar() {
             Home
           </NavLink>
         )}
-        {isLoggedIn && role === "user" && (
-          <NavLink to="/my-ticket" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
-            My Ticket
+        {isLoggedIn && (
+          <NavLink to="/register" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
+            Register
           </NavLink>
         )}
-        <NavLink to="/register" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
-          Register
-        </NavLink>
         {isLoggedIn && role === "admin" && (
           <NavLink to="/admin" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
-            Admin
+            Admin Approval Dashboard
+          </NavLink>
+        )}
+        {isLoggedIn && role === "admin" && (
+          <NavLink to="/temple-tickets" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
+            Tickets
           </NavLink>
         )}
         {!isLoggedIn && (
@@ -47,19 +49,10 @@ export default function Navbar() {
             Admin Login
           </NavLink>
         )}
-        {!isLoggedIn && (
-          <NavLink to="/signup" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
-            Sign Up
-          </NavLink>
-        )}
-        {isLoggedIn ? (
+        {isLoggedIn && (
           <button className="button button-outline small" type="button" onClick={handleLogout}>
             Logout
           </button>
-        ) : (
-          <NavLink to="/" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
-            Login
-          </NavLink>
         )}
       </nav>
     </header>
