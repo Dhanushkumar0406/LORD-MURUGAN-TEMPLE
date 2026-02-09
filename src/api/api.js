@@ -1,4 +1,4 @@
-const BASE_URL = "";
+const BASE_URL = "https://aarupadi-ticket-booking-backend.onrender.com";
 
 function getToken() {
   return localStorage.getItem("authToken");
